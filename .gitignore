@@ -33,4 +33,6 @@ tmp/
 /models/post_processing/ccl/.idea/workspace.xml
 
 venv
+speed_test/
 .DS_Store
+
