@@ -68,11 +68,18 @@ Then, install PyTorch, torchvision, and other requirements:
 
 ```shell
 pip3 install -r requirements.txt
-```shell
+```
 
-# build pse, pa, and ccl algorithms
+# build pse, pa, and ccl algorithms, 
+```shell
 sh ./compile.sh
 ```
+
+# if you are on OSX or non cuda add --cpu to avoid compiling cuda code
+```shell
+sh ./compile.sh --cpu
+```
+
 
 ### Dataset
 Please refer to [dataset/README.md](dataset/README.md) for dataset preparation.

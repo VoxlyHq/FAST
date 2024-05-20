@@ -1,7 +1,9 @@
 import torch
 import argparse
 import os
-from mmcv import Config
+#from mmcv import Config #mmcv removed this 
+#from compat import Config
+from compat.config import Config
 
 from models import build_model
 from models.utils import fuse_module, rep_model_convert
