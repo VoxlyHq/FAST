@@ -58,31 +58,18 @@ First, clone the repository locally:
 git clone https://github.com/czczup/FAST
 ```
 
+Make a virtual env or conda or whatever you like
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
 Then, install PyTorch 1.1.0+, torchvision 0.3.0+, and other requirements:
 
 ```shell
-# for python3 (training and testing)
-pip install editdistance
-pip install Polygon3
-pip install pyclipper
-pip install Cython
-pip install mmcv
-pip install prefetch_generator
-pip install scipy
-pip install yacs
-pip install tqdm
-pip install opencv-python==4.6.0.66
-
-# for python2 (evaluation)
-# the evaluation code is from pan_pp.pytorch
-pip2 install numpy==1.10
-pip2 install scipy==1.2.2
-pip2 install polygon2
-```
-
-Finally, compile codes of post-processing:
-
+pip3 install -r requirements.txt
 ```shell
+
 # build pse, pa, and ccl algorithms
 sh ./compile.sh
 ```

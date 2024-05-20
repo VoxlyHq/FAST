@@ -32,4 +32,5 @@ tmp/
 /.idea
 /models/post_processing/ccl/.idea/workspace.xml
 
+venv
 .DS_Store
