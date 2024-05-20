@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Determine if the OS is macOS
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [ "$(uname)" = "Darwin" ]; then
     CCL_DIR="ccl_cpu"
 else
     # Check for the --cpu flag
-    if [[ "$1" == "--cpu" ]]; then
+    if [ "$1" = "--cpu" ]; then
         CCL_DIR="ccl_cpu"
     else
         CCL_DIR="ccl"
