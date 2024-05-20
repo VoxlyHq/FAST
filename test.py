@@ -2,7 +2,10 @@ import torch
 import argparse
 import os
 import sys
-from mmcv import Config
+#from mmcv import Config #mmcv removed this 
+#from compat import Config
+from compat.config import Config
+
 import mmcv
 from dataset import build_data_loader
 from models import build_model
