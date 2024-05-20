@@ -64,7 +64,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-Then, install PyTorch 1.1.0+, torchvision 0.3.0+, and other requirements:
+Then, install PyTorch, torchvision, and other requirements:
 
 ```shell
 pip3 install -r requirements.txt
