@@ -95,11 +95,11 @@ def get_msra_ann(img, gt_path):
 
         gt = line.split(' ')
 
-        w_ = np.float(gt[4])
-        h_ = np.float(gt[5])
-        x1 = np.float(gt[2]) + w_ / 2.0
-        y1 = np.float(gt[3]) + h_ / 2.0
-        theta = np.float(gt[6]) / math.pi * 180
+        w_ = np.float64(gt[4])
+        h_ = np.float64(gt[5])
+        x1 = np.float64(gt[2]) + w_ / 2.0
+        y1 = np.float64(gt[3]) + h_ / 2.0
+        theta = np.float64(gt[6]) / math.pi * 180
 
         bbox = cv2.boxPoints(((x1, y1), (w_, h_), theta))
         bbox = bbox.reshape(-1) / ([w * 1.0, h * 1.0] * 4)
