@@ -11,7 +11,15 @@ import cv2
 try:
     from ..post_processing import ccl_cuda
 except:
-    print("ccl_cuda is not installed!")
+    try:
+        from ..post_processing import ccl_cpu as ccl_cuda
+    except:
+        print("ccl_cuda and ccl_cpu are both not installed!")
+
+
+def gpu_synchronize():
+    if torch.cuda.is_available(): #TODO memoize this?
+        torch.cuda.synchronize()
 
 
 class FASTHead(nn.Module):
@@ -64,7 +72,7 @@ class FASTHead(nn.Module):
     def get_results(self, out, img_meta, cfg, scale=2):
         
         if not self.training:
-            torch.cuda.synchronize()
+            gpu_synchronize()
             start = time.time()
 
         org_img_size = img_meta['org_img_size'][0]
@@ -98,7 +106,7 @@ class FASTHead(nn.Module):
         keys = [torch.unique(labels_[i], sorted=True) for i in range(batch_size)]
 
         if not self.training:
-            torch.cuda.synchronize()
+            gpu_synchronize()
             outputs.update(dict(
                 post_time=time.time() - start
             ))
