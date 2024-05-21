@@ -5,7 +5,7 @@ import logging
 import warnings
 import json
 import platform
-from PIL import Image
+from PIL import Image, ImageDraw
 import torchvision.transforms as transforms
 import numpy as np
 
@@ -23,7 +23,7 @@ from dataset.utils import scale_aligned_short, scale_aligned_long
 warnings.filterwarnings('ignore')
 
 class FAST:
-    def __init__(self, config="config/fast/msra/fast_base_msra_736_finetune_ic17mlt.py", checkpoint=None,
+    def __init__(self, config="config/fast/tt/fast_base_tt_640_finetune_ic17mlt.py", checkpoint=None,
                  min_score=None, min_area=None, batch_size=1, worker=4, ema=False, cpu=False):
         self.config = config
         self.checkpoint = checkpoint
@@ -51,6 +51,8 @@ class FAST:
         if self.min_area is not None:
             self.cfg.test_cfg.min_area = self.min_area
 
+        print(f"self.cfg --#{self.cfg}")
+
         self.cfg.batch_size = self.batch_size
 
         self.load_model()
@@ -58,9 +60,33 @@ class FAST:
 
     def has_text(self, image):
         outputs = self.run_model(image)
+        print(outputs['results'])
+        # If scores are present, return True
         if len(outputs['results'][0]['scores']) > 0:
             return True
         return False
+    
+    def add_annotations(self, image, bboxes):
+        # Convert Tensor to a NumPy array if it isn't already
+        if isinstance(image, torch.Tensor):
+            image = image.cpu().numpy()
+        
+        # Convert NumPy array to a Pillow Image
+        if len(image.shape) == 3 and image.shape[0] in [1, 3]:  # Handle grayscale or RGB images
+            image = image.transpose(1, 2, 0)
+        
+        image = Image.fromarray((image * 255).astype(np.uint8))
+
+        draw = ImageDraw.Draw(image)
+        
+        for bbox in bboxes:
+            # Bounding box points come in sets of four, so we need to draw lines between these points
+            points = [(bbox[i], bbox[i+1]) for i in range(0, len(bbox), 2)]
+            
+            # Draw the bounding box
+            draw.polygon(points, outline="red", width=2)
+        
+        return image
 
 
     def run_model(self, filename):
@@ -81,16 +107,16 @@ class FAST:
         img = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(img)
 
 
-        test_cfg = dict(
-            min_score=0.88,
-            min_area=250,
-            bbox_type='rect',
-#            result_path='outputs/notused.zip'
-        )
-
-
         with torch.no_grad():
-            outputs = self.model(img.unsqueeze(0), img_metas=img_meta, cfg=test_cfg)
+            outputs = self.model(img.unsqueeze(0), img_metas=img_meta, cfg=self.cfg)
+
+           # if len(outputs['results'][0]['scores']) > 0:
+                # Annotate the image with bounding boxes
+           
+           #     annotated_image = self.add_annotations(img, outputs['results'][0]['bboxes'])
+           #     annotated_image.show()  # Display the image with annotations
+
+
             return outputs
 
 #    def forward(self, imgs, gt_texts=None, gt_kernels=None, training_masks=None,
@@ -179,7 +205,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Hyperparams')
-    parser.add_argument('--config', help='config file path', default="config/fast/msra/fast_base_msra_736_finetune_ic17mlt.py")
+    parser.add_argument('--config', help='config file path', default="config/fast/tt/fast_base_tt_640_finetune_ic17mlt.py")
     parser.add_argument('image',  type=str, default=None)
     parser.add_argument('checkpoint', nargs='?', type=str, default=None)
     parser.add_argument('--print-model', action='store_true')
@@ -201,6 +227,3 @@ if __name__ == '__main__':
 
     has_text = tester.has_text(args.image)
     print(f"Has text: {has_text}")
-
-    text = tester.text(args.image)
-    print(f"Text: {text}")
