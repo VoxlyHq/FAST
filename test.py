@@ -4,13 +4,13 @@ import os
 import sys
 #from mmcv import Config #mmcv removed this 
 #from compat import Config
-from compat.config import Config
-from compat.path import mkdir_or_exist
+from fast.compat.config import Config
+from fast.compat.path import mkdir_or_exist
 
-from dataset import build_data_loader
-from models import build_model
-from models.utils import fuse_module, rep_model_convert
-from utils import ResultFormat, AverageMeter
+from fast.dataset import build_data_loader
+from fast.models import build_model
+from fast.models.utils import fuse_module, rep_model_convert
+from fast.utils import ResultFormat, AverageMeter
 from mmcv.cnn import get_model_complexity_info
 import logging
 import warnings
