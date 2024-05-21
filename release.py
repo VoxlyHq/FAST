@@ -1,5 +1,5 @@
 import torch
-import mmcv
+from compat.path import mkdir_or_exist
 import argparse
 import os.path as osp
 
@@ -14,7 +14,7 @@ state_dict = checkpoint['ema']
 for k, v in state_dict.items():
     print(k)
 checkpoint = {'ema': state_dict}
-mmcv.mkdir_or_exist("converted/")
+mkdir_or_exist("converted/")
 try:
     torch.save(checkpoint, osp.join("converted", dir_name+".pth"), _use_new_zipfile_serialization=False)
 except:
