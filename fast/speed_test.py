@@ -21,7 +21,7 @@ class SpeedTest:
                  min_score=None, min_area=None, batch_size=1, worker=4, ema=False, cpu=False):
         self.config = config
         self.checkpoint = checkpoint
-        self.report_speed = report_speed
+        self.b_report_speed = report_speed
         self.print_model = print_model
         self.min_score = min_score
         self.min_area = min_area
@@ -43,7 +43,7 @@ class SpeedTest:
         self.cfg = Config.fromfile(self.config)
         for d in [self.cfg, self.cfg.data.test]:
             d.update(dict(
-                report_speed=self.report_speed,
+                report_speed=self.b_report_speed,
             ))
         if self.min_score is not None:
             self.cfg.test_cfg.min_score = self.min_score
