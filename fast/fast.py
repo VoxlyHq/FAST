@@ -24,7 +24,7 @@ warnings.filterwarnings('ignore')
 
 class FAST:
     def __init__(self, config="config/fast/tt/fast_base_tt_640_finetune_ic17mlt.py", checkpoint=None,
-                 min_score=None, min_area=None, batch_size=1, worker=4, ema=False, cpu=False):
+                 min_score=None, min_area=None, batch_size=1, worker=4, ema=False, cpu=False, annotate=False):
         self.config = config
         self.checkpoint = checkpoint
         self.min_score = min_score
@@ -34,6 +34,7 @@ class FAST:
         self.ema = ema
         self.cpu = cpu
         self.model = None
+        self.annotate = annotate
 
 
         os_name = platform.system()
@@ -110,11 +111,11 @@ class FAST:
         with torch.no_grad():
             outputs = self.model(img.unsqueeze(0), img_metas=img_meta, cfg=self.cfg)
 
-           # if len(outputs['results'][0]['scores']) > 0:
+            if self.annotate and len(outputs['results'][0]['scores']) > 0:
                 # Annotate the image with bounding boxes
            
-           #     annotated_image = self.add_annotations(img, outputs['results'][0]['bboxes'])
-           #     annotated_image.show()  # Display the image with annotations
+                annotated_image = self.add_annotations(img, outputs['results'][0]['bboxes'])
+                annotated_image.show()  # Display the image with annotations
 
 
             return outputs
@@ -215,13 +216,14 @@ if __name__ == '__main__':
     parser.add_argument('--worker', default=4, type=int)
     parser.add_argument('--ema', action='store_true')
     parser.add_argument('--cpu', action='store_true')
+    parser.add_argument('--annotate', action='store_true')
 
     args = parser.parse_args()
     config_name = os.path.basename(args.config)
 
     tester = FAST(config=args.config, checkpoint=args.checkpoint,
                          min_score=args.min_score, min_area=args.min_area,
-                         batch_size=args.batch_size, worker=args.worker, ema=args.ema, cpu=args.cpu)
+                         batch_size=args.batch_size, worker=args.worker, ema=args.ema, cpu=args.cpu, annotate=args.annotate)
     
 #    tester.main()
 
