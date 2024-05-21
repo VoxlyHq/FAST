@@ -14,7 +14,7 @@ from utils import ResultFormat, AverageMeter
 warnings.filterwarnings('ignore')
 
 class FAST:
-    def __init__(self, config, checkpoint=None, report_speed=False, print_model=False,
+    def __init__(self, config="config/fast/msra/fast_base_msra_736_finetune_ic17mlt.py", checkpoint=None, report_speed=False, print_model=False,
                  min_score=None, min_area=None, batch_size=1, worker=4, ema=False, cpu=False):
         self.config = config
         self.checkpoint = checkpoint
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Hyperparams')
-    parser.add_argument('config', help='config file path')
+    parser.add_argument('--config', help='config file path', default="config/fast/msra/fast_base_msra_736_finetune_ic17mlt.py")
     parser.add_argument('checkpoint', nargs='?', type=str, default=None)
     parser.add_argument('--report-speed', action='store_true')
     parser.add_argument('--print-model', action='store_true')
