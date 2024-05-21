@@ -6,7 +6,8 @@ from dataset.fast.fast_ic15 import ic15_test_data_dir, ic15_test_gt_dir
 from dataset.utils import get_msra_ann, get_ctw_ann, get_tt_ann, get_ic15_ann, get_img
 
 import cv2
-import mmcv
+import mmcv #TODO remove this
+from compat.path import mkdir_or_exist
 import random
 import argparse
 import numpy as np
@@ -143,7 +144,7 @@ def visual(get_ann, data_dir, gt_dir, pred_dir, dataset):
         img_gt = draw(img_, gt, word) # draw ground truths on images
         img = np.hstack((img_gt, img_pred)) # stack two images
         img = Image.fromarray(img)
-        mmcv.mkdir_or_exist(f"visual/{dataset}")
+        mkdir_or_exist(f"visual/{dataset}")
         img.save(f"visual/{dataset}/{index}.png") # save images into visual/
         
 
