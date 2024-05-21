@@ -58,11 +58,10 @@ class FAST:
 
     def has_text(self, image):
         outputs = self.run_model(image)
+        if len(outputs['results'][0]['scores']) > 0:
+            return True
         return False
 
-    def text(self, image):
-        outputs = self.run_model(image)
-        return ""
 
     def run_model(self, filename):
         img = get_img(filename)
