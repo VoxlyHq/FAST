@@ -4,12 +4,15 @@ import sys
 import logging
 import warnings
 import json
+import platform
 
 from compat.config import Config
 from dataset import build_data_loader
 from models import build_model
 from models.utils import fuse_module, rep_model_convert
 from utils import ResultFormat, AverageMeter
+from compat.path import mkdir_or_exist
+
 
 warnings.filterwarnings('ignore')
 
@@ -26,6 +29,16 @@ class FAST:
         self.worker = worker
         self.ema = ema
         self.cpu = cpu
+
+
+        os_name = platform.system()
+        has_cuda = torch.cuda.is_available()
+        #On OSX we can only use cpu
+        if os_name == 'Darwin':  # macOS
+            self.cpu = True
+        elif not has_cuda:
+            self.cpu = True
+            print("Cuda is not installed on this machine, running on CPU.")
 
         self.cfg = Config.fromfile(self.config)
         for d in [self.cfg, self.cfg.data.test]:
@@ -189,7 +202,7 @@ if __name__ == '__main__':
     parser.add_argument('--cpu', action='store_true')
 
     args = parser.parse_args()
-    mmcv.mkdir_or_exist("./speed_test")
+    mkdir_or_exist("./speed_test")
     config_name = os.path.basename(args.config)
     logging.basicConfig(filename=f'./speed_test/{config_name}.txt', level=logging.INFO)
 
