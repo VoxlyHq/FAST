@@ -1,4 +1,4 @@
-#!/bin/bash
+#   !/bin/bash
 
 # Determine if the OS is macOS
 if [ "$(uname)" = "Darwin" ]; then

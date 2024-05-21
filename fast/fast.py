@@ -6,14 +6,18 @@ import warnings
 import json
 import platform
 from PIL import Image
+import torchvision.transforms as transforms
+import numpy as np
 
 
+from dataset.utils import get_img
 from compat.config import Config
 from dataset import build_data_loader
 from models import build_model
 from models.utils import fuse_module, rep_model_convert
 from utils import ResultFormat, AverageMeter
 from compat.path import mkdir_or_exist
+from dataset.utils import scale_aligned_short, scale_aligned_long
 
 
 warnings.filterwarnings('ignore')
@@ -29,6 +33,7 @@ class FAST:
         self.worker = worker
         self.ema = ema
         self.cpu = cpu
+        self.model = None
 
 
         os_name = platform.system()
@@ -48,15 +53,52 @@ class FAST:
 
         self.cfg.batch_size = self.batch_size
 
+        self.load_model()
+
 
     def has_text(self, image):
+        outputs = self.run_model(image)
         return False
 
     def text(self, image):
+        outputs = self.run_model(image)
         return ""
 
+    def run_model(self, filename):
+        img = get_img(filename)
+        img_meta = dict(
+            org_img_size=[np.array(img.shape[:2])]
+        )
+        img = scale_aligned_short(img, 640)
+        img_meta.update(dict(
+            img_size=[np.array(img.shape[:2])],
+            filename=filename
+        ))
 
-    def test(self, test_loader, model):
+        # forward
+        img = Image.fromarray(img)
+        img = img.convert('RGB')
+        img = transforms.ToTensor()(img)
+        img = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(img)
+
+
+        test_cfg = dict(
+            min_score=0.88,
+            min_area=250,
+            bbox_type='rect',
+#            result_path='outputs/notused.zip'
+        )
+
+
+        with torch.no_grad():
+            outputs = self.model(img.unsqueeze(0), img_metas=img_meta, cfg=test_cfg)
+            return outputs
+
+#    def forward(self, imgs, gt_texts=None, gt_kernels=None, training_masks=None,
+#                gt_instances=None, img_metas=None, cfg=None):
+
+
+    def test(self, test_loader):
         rf = ResultFormat(self.cfg.data.test.type, self.cfg.test_cfg.result_path)
 
         results = dict()
@@ -70,7 +112,7 @@ class FAST:
             data.update(dict(cfg=self.cfg))
             # forward
             with torch.no_grad():
-                outputs = model(**data)
+                outputs = self.model(**data)
 
             # save result
             image_names = data['img_metas']['filename']
@@ -84,16 +126,7 @@ class FAST:
                 json.dump(results, json_file, ensure_ascii=False)
                 print("write json file success!")
 
-    def main(self):
-        # data loader
-        data_loader = build_data_loader(self.cfg.data.test)
-        test_loader = torch.utils.data.DataLoader(
-            data_loader,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.worker,
-            pin_memory=False
-        )
+    def load_model(self):
         # model
         model = build_model(self.cfg.model)
 
@@ -127,7 +160,20 @@ class FAST:
         model = fuse_module(model)
 
         model.eval()
-        self.test(test_loader, model)
+        self.model = model
+
+    def main(self):
+        # data loader
+        data_loader = build_data_loader(self.cfg.data.test)
+        test_loader = torch.utils.data.DataLoader(
+            data_loader,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.worker,
+            pin_memory=False
+        )
+
+        self.test(test_loader)
 
 
 if __name__ == '__main__':
@@ -151,9 +197,11 @@ if __name__ == '__main__':
     tester = FAST(config=args.config, checkpoint=args.checkpoint,
                          min_score=args.min_score, min_area=args.min_area,
                          batch_size=args.batch_size, worker=args.worker, ema=args.ema, cpu=args.cpu)
+    
+#    tester.main()
 
-    has_text = tester.has_text(Image.open(args.image))
+    has_text = tester.has_text(args.image)
     print(f"Has text: {has_text}")
 
-    text = tester.text(Image.open(args.image))
+    text = tester.text(args.image)
     print(f"Text: {text}")
