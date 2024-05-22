@@ -2,6 +2,8 @@ import platform
 from setuptools import setup, find_packages, Extension
 from Cython.Build import cythonize
 import numpy
+import torch
+from torch.utils import cpp_extension
 
 # Function to determine the correct directory for CCL
 def determine_ccl_dir():
@@ -18,6 +20,10 @@ def determine_ccl_dir():
         return 'ccl'  # CUDA GPU available
     else:
         return 'ccl_cpu'  # Default to cpu
+
+# Define include and library directories for PyTorch
+torch_include_dirs = torch.utils.cpp_extension.include_paths()
+torch_library_dirs = torch.utils.cpp_extension.library_paths()
 
 def get_ccl_extension():
     # Determine the CCL directory
@@ -41,9 +47,9 @@ def get_ccl_extension():
             'ccl',
             sources=['fast/models/post_processing/ccl_cpu/ccl.cpp'],
             language='c++',
-            include_dirs=[numpy.get_include()],
-            library_dirs=[],
-            libraries=[],
+            include_dirs=[numpy.get_include()] + torch_include_dirs,
+            library_dirs=torch_library_dirs,
+            libraries=["torch", "torch_cpu", "c10"],  # List necessary PyTorch libraries
             extra_compile_args=['-O3'],
             extra_link_args=[]
         )
