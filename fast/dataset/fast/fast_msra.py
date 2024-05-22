@@ -5,7 +5,6 @@ import cv2
 import random
 import torchvision.transforms as transforms
 import torch
-#import mmcv
 import torch.nn as nn
 
 from fast.dataset.utils import shrink
@@ -14,6 +13,7 @@ from fast.dataset.utils import get_msra_ann as get_ann
 from fast.dataset.utils import random_scale, random_horizontal_flip, random_rotate
 from fast.dataset.utils import random_crop_padding_v2 as random_crop_padding
 from fast.dataset.utils import scale_aligned_short
+from fast.compat.path import scandir
 
 msra_root_dir = './data/MSRA-TD500/'
 msra_train_data_dir = msra_root_dir + 'train/'
@@ -56,8 +56,8 @@ class FAST_MSRA(data.Dataset):
         self.gt_paths = []
 
         for data_dir, gt_dir in zip(data_dirs, gt_dirs):
-            img_names = [img_name for img_name in mmcv.utils.scandir(data_dir) if img_name.endswith('.JPG')]
-            img_names.extend([img_name for img_name in mmcv.utils.scandir(data_dir) if img_name.endswith('.jpg')])
+            img_names = [img_name for img_name in scandir(data_dir) if img_name.endswith('.JPG')]
+            img_names.extend([img_name for img_name in scandir(data_dir) if img_name.endswith('.jpg')])
 
             img_paths = []
             gt_paths = []

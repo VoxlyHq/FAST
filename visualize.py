@@ -6,8 +6,7 @@ from dataset.fast.fast_ic15 import ic15_test_data_dir, ic15_test_gt_dir
 from dataset.utils import get_msra_ann, get_ctw_ann, get_tt_ann, get_ic15_ann, get_img
 
 import cv2
-import mmcv #TODO remove this
-from compat.path import mkdir_or_exist
+from compat.path import mkdir_or_exist, scandir, list_from_file
 import random
 import argparse
 import numpy as np
@@ -22,7 +21,7 @@ ic15_pred_dir = 'outputs/submit_ic15/'
 
 
 def get_pred(pred_path):
-    lines = mmcv.list_from_file(pred_path)
+    lines = list_from_file(pred_path)
     bboxes = []
     words = []
     for line in lines:
@@ -57,9 +56,9 @@ def draw(img, boxes, words):
     
 def visual(get_ann, data_dir, gt_dir, pred_dir, dataset):
     
-    img_names = [img_name for img_name in mmcv.utils.scandir(data_dir, '.jpg')]
-    img_names.extend([img_name for img_name in mmcv.utils.scandir(data_dir, '.png')])
-    img_names.extend([img_name for img_name in mmcv.utils.scandir(data_dir, '.JPG')])
+    img_names = [img_name for img_name in scandir(data_dir, '.jpg')]
+    img_names.extend([img_name for img_name in scandir(data_dir, '.png')])
+    img_names.extend([img_name for img_name in scandir(data_dir, '.JPG')])
     
     img_paths, gt_paths, pred_paths = [], [], []
     

@@ -57,8 +57,8 @@ class FAST_IC17MLT(data.Dataset):
         self.gt_paths = []
         
         for data_dir, gt_dir in zip(data_dirs, gt_dirs):
-            img_names = [img_name for img_name in mmcv.utils.scandir(data_dir, '.jpg')]
-            img_names.extend([img_name for img_name in mmcv.utils.scandir(data_dir, '.png')])
+            img_names = [img_name for img_name in scandir(data_dir, '.jpg')]
+            img_names.extend([img_name for img_name in scandir(data_dir, '.png')])
             
             img_paths = []
             gt_paths = []

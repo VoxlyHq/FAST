@@ -12,3 +12,10 @@ def mkdir_or_exist(dir_name, mode=0o777):
         return
     dir_name = osp.expanduser(dir_name)
     os.makedirs(dir_name, mode=mode, exist_ok=True)
+
+
+def scandir():
+    panic("Weeee")
+
+def list_from_file():
+    panic("aaaaaa")

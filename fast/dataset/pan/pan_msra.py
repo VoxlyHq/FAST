@@ -50,8 +50,8 @@ class PAN_MSRA(data.Dataset):
         self.gt_paths = []
 
         for data_dir, gt_dir in zip(data_dirs, gt_dirs):
-            img_names = [img_name for img_name in mmcv.utils.scandir(data_dir) if img_name.endswith('.JPG')]
-            img_names.extend([img_name for img_name in mmcv.utils.scandir(data_dir) if img_name.endswith('.jpg')])
+            img_names = [img_name for img_name in scandir(data_dir) if img_name.endswith('.JPG')]
+            img_names.extend([img_name for img_name in scandir(data_dir) if img_name.endswith('.jpg')])
 
             img_paths = []
             gt_paths = []
