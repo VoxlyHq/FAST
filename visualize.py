@@ -6,7 +6,7 @@ from dataset.fast.fast_ic15 import ic15_test_data_dir, ic15_test_gt_dir
 from dataset.utils import get_msra_ann, get_ctw_ann, get_tt_ann, get_ic15_ann, get_img
 
 import cv2
-from compat.path import mkdir_or_exist, scandir, list_from_file
+from fast.compat.path import mkdir_or_exist, scandir, list_from_file
 import random
 import argparse
 import numpy as np

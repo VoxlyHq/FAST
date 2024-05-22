@@ -1,7 +1,7 @@
 import random
 
 import cv2
-#import mmcv
+from fast.compat.path import  scandir
 import numpy as np
 import torch
 import torch.nn as nn

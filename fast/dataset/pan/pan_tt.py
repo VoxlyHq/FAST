@@ -4,7 +4,7 @@ from torch.utils import data
 import cv2
 import torchvision.transforms as transforms
 import torch
-#import mmcv
+from fast.compat.path import  scandir
 
 from fast.dataset.utils import shrink
 from fast.dataset.utils import get_img

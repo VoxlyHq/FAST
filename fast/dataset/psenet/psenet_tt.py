@@ -10,8 +10,11 @@ import Polygon as plg
 import math
 import string
 import scipy.io as scio
+#TODO what does this do??
 #import mmcv
 #from mmcv.parallel import DataContainer as DC
+from fast.compat.path import scandir
+
 
 tt_root_dir = './data/total_text/'
 tt_train_data_dir = tt_root_dir + 'Images/Train/'

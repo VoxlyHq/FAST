@@ -3,7 +3,7 @@ from torch.utils import data
 from PIL import Image
 import numpy as np
 import torch
-#import mmcv
+from fast.compat.path import scandir
 import cv2
 
 from fast.dataset.utils import shrink

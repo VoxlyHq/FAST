@@ -8,7 +8,7 @@ import torch
 import pyclipper
 import Polygon as plg
 import math
-#import mmcv
+from fast.compat.path import mkdir_or_exist, scandir, list_from_file
 import string
 
 ic15_root_dir = './data/ICDAR2015/Challenge4/'
@@ -75,7 +75,7 @@ def shrink(bboxes, rate, max_shr=20):
 
 def get_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:

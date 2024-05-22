@@ -5,7 +5,7 @@ import cv2
 import random
 import torchvision.transforms as transforms
 import torch
-#import mmcv
+from fast.compat.path import scandir
 import torch.nn as nn
 
 from fast.dataset.utils import shrink

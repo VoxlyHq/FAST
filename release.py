@@ -1,5 +1,5 @@
 import torch
-from compat.path import mkdir_or_exist
+from fast.compat.path import mkdir_or_exist
 import argparse
 import os.path as osp
 

@@ -1,5 +1,5 @@
 import os
-import mmcv
+#import mmcv  #TODO fix this script to not use MMCV, probably just need this load function
 import argparse
 
 parser = argparse.ArgumentParser(description='Hyperparams')
@@ -8,7 +8,7 @@ parser.add_argument('--pred', nargs='?', type=str, default=None)
 args = parser.parse_args()
 
 output_root = '../outputs/tmp_results/'
-pred = mmcv.load(args.pred)
+pred = mmcv.load(args.pred) #TODO rewrite or copy the mmcv load functionfrom fast.compat.path import scandir
 
 def write_result_as_txt(image_name, bboxes, path, words=None):
     if not os.path.exists(path):

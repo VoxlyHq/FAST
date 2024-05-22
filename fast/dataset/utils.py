@@ -5,7 +5,7 @@ import numpy as np
 import pyclipper
 import random
 import string
-#import mmcv
+from fast.compat.path import  list_from_file
 import math
 import cv2
 
@@ -25,7 +25,7 @@ def get_img(img_path, read_type='pil'):
 
 def get_ctw_ann_old(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:
@@ -45,7 +45,7 @@ def get_ctw_ann_old(img, gt_path):
 
 def get_ctw_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:
@@ -65,7 +65,7 @@ def get_ctw_ann(img, gt_path):
 
 def get_ic15_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:
@@ -86,7 +86,7 @@ def get_ic15_ann(img, gt_path):
 
 def get_msra_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:
@@ -164,7 +164,7 @@ def get_tt_ann(img, gt_path):
 
 def get_ic17mlt_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:

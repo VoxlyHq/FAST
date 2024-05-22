@@ -10,7 +10,7 @@ import Polygon as plg
 import math
 import string
 import scipy.io as scio
-#import mmcv
+from fast.compat.path import scandir, list_from_file
 
 ctw_root_dir = './data/ctw1500/'
 ctw_train_data_dir = ctw_root_dir + 'train/text_image/'
@@ -34,7 +34,7 @@ def get_img(img_path, read_type='pil'):
 
 def get_ann(img, gt_path):
     h, w = img.shape[0:2]
-    lines = mmcv.list_from_file(gt_path)
+    lines = list_from_file(gt_path)
     bboxes = []
     words = []
     for line in lines:

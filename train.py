@@ -7,8 +7,6 @@ import os.path as osp
 import sys
 import time
 import json
-#from mmcv import Config #mmcv removed this 
-#from compat import Config
 from compat.config import Config
 
 import logging
