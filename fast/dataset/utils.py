@@ -5,7 +5,7 @@ import numpy as np
 import pyclipper
 import random
 import string
-import mmcv
+#import mmcv
 import math
 import cv2
 

@@ -1,7 +1,7 @@
 import random
 
 import cv2
-import mmcv
+#import mmcv
 import numpy as np
 import torch
 import torch.nn as nn

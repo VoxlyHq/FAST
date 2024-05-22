@@ -4,7 +4,7 @@ from torch.utils import data
 import cv2
 import torchvision.transforms as transforms
 import torch
-import mmcv
+#import mmcv
 import torch.nn as nn
 
 from fast.dataset.utils import shrink

@@ -15,7 +15,7 @@ from collections import abc
 from importlib import import_module
 from pathlib import Path
 
-import mmengine
+#import mmengine
 from addict import Dict
 from yapf.yapflib.yapf_api import FormatCode
 

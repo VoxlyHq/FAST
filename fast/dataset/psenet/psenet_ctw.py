@@ -10,7 +10,7 @@ import Polygon as plg
 import math
 import string
 import scipy.io as scio
-import mmcv
+#import mmcv
 
 ctw_root_dir = './data/ctw1500/'
 ctw_train_data_dir = ctw_root_dir + 'train/text_image/'

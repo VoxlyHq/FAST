@@ -10,8 +10,8 @@ import Polygon as plg
 import math
 import string
 import scipy.io as scio
-import mmcv
-from mmcv.parallel import DataContainer as DC
+#import mmcv
+#from mmcv.parallel import DataContainer as DC
 
 tt_root_dir = './data/total_text/'
 tt_train_data_dir = tt_root_dir + 'Images/Train/'

@@ -8,7 +8,7 @@ import torch
 import pyclipper
 import Polygon as plg
 import math
-import mmcv
+#import mmcv
 import string
 
 ic15_root_dir = './data/ICDAR2015/Challenge4/'
