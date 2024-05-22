@@ -7,13 +7,13 @@ import torch
 import mmcv
 import torch.nn as nn
 
-from dataset.utils import shrink
-from dataset.utils import get_img
-from dataset.utils import get_ic17mlt_ann as get_ann
-from dataset.utils import random_scale, random_horizontal_flip, random_rotate
-from dataset.utils import random_crop_padding_v2 as random_crop_padding
-from dataset.utils import update_word_mask, get_vocabulary
-from dataset.utils import scale_aligned_short, center_crop
+from fast.dataset.utils import shrink
+from fast.dataset.utils import get_img
+from fast.dataset.utils import get_ic17mlt_ann as get_ann
+from fast.dataset.utils import random_scale, random_horizontal_flip, random_rotate
+from fast.dataset.utils import random_crop_padding_v2 as random_crop_padding
+from fast.dataset.utils import update_word_mask, get_vocabulary
+from fast.dataset.utils import scale_aligned_short, center_crop
 
 
 mlt_root_dir = './data/ICDAR2017-MLT/'

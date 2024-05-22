@@ -10,14 +10,14 @@ import torchvision.transforms as transforms
 import numpy as np
 
 
-from dataset.utils import get_img
-from compat.config import Config
-from dataset import build_data_loader
-from models import build_model
-from models.utils import fuse_module, rep_model_convert
-from utils import ResultFormat, AverageMeter
-from compat.path import mkdir_or_exist
-from dataset.utils import scale_aligned_short, scale_aligned_long
+from .dataset.utils import get_img
+from .compat.config import Config
+from .dataset import build_data_loader
+from .models import build_model
+from .models.utils import fuse_module, rep_model_convert
+from .utils import ResultFormat, AverageMeter
+from .compat.path import mkdir_or_exist
+from .dataset.utils import scale_aligned_short, scale_aligned_long
 
 
 warnings.filterwarnings('ignore')

@@ -6,12 +6,12 @@ import numpy as np
 import torch
 import cv2
 
-from dataset.utils import shrink
-from dataset.utils import get_img
-from dataset.utils import get_synth_ann as get_ann
-from dataset.utils import random_scale, random_horizontal_flip, random_rotate
-from dataset.utils import random_crop_padding_v1 as random_crop_padding
-from dataset.utils import update_word_mask, get_vocabulary
+from fast.dataset.utils import shrink
+from fast.dataset.utils import get_img
+from fast.dataset.utils import get_synth_ann as get_ann
+from fast.dataset.utils import random_scale, random_horizontal_flip, random_rotate
+from fast.dataset.utils import random_crop_padding_v1 as random_crop_padding
+from fast.dataset.utils import update_word_mask, get_vocabulary
 
 synth_root_dir = './data/SynthText/'
 synth_train_data_dir = synth_root_dir

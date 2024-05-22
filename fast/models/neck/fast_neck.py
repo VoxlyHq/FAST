@@ -1,5 +1,5 @@
 import torch.nn as nn
-from models.utils.nas_utils import set_layer_from_config
+from fast.models.utils.nas_utils import set_layer_from_config
 import torch.nn.functional as F
 import torch
 import json

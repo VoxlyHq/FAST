@@ -1,6 +1,6 @@
 import torch.nn as nn
 import json
-from models.utils.nas_utils import set_layer_from_config
+from fast.models.utils.nas_utils import set_layer_from_config
 
 
 class TextNet(nn.Module):

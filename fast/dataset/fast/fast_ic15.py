@@ -9,13 +9,13 @@ import torchvision.transforms as transforms
 from PIL import Image, ImageFilter
 from torch.utils import data
 
-from dataset.utils import get_ic15_ann as get_ann
-from dataset.utils import get_img
-from dataset.utils import get_vocabulary
-from dataset.utils import random_crop_padding_v2 as random_crop_padding
-from dataset.utils import random_scale, random_horizontal_flip, random_rotate
-from dataset.utils import scale_aligned_short
-from dataset.utils import shrink
+from fast.dataset.utils import get_ic15_ann as get_ann
+from fast.dataset.utils import get_img
+from fast.dataset.utils import get_vocabulary
+from fast.dataset.utils import random_crop_padding_v2 as random_crop_padding
+from fast.dataset.utils import random_scale, random_horizontal_flip, random_rotate
+from fast.dataset.utils import scale_aligned_short
+from fast.dataset.utils import shrink
 
 ic15_root_dir = './data/ICDAR2015/Challenge4/'
 ic15_train_data_dir = ic15_root_dir + 'ch4_training_images/'

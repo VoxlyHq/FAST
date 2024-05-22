@@ -8,12 +8,12 @@ import torch
 import mmcv
 import torch.nn as nn
 
-from dataset.utils import shrink
-from dataset.utils import get_img
-from dataset.utils import get_msra_ann as get_ann
-from dataset.utils import random_scale, random_horizontal_flip, random_rotate
-from dataset.utils import random_crop_padding_v2 as random_crop_padding
-from dataset.utils import scale_aligned_short
+from fast.dataset.utils import shrink
+from fast.dataset.utils import get_img
+from fast.dataset.utils import get_msra_ann as get_ann
+from fast.dataset.utils import random_scale, random_horizontal_flip, random_rotate
+from fast.dataset.utils import random_crop_padding_v2 as random_crop_padding
+from fast.dataset.utils import scale_aligned_short
 
 msra_root_dir = './data/MSRA-TD500/'
 msra_train_data_dir = msra_root_dir + 'train/'
