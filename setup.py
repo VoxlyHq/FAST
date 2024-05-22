@@ -105,7 +105,10 @@ def get_ccl_extension():
             include_dirs=[numpy.get_include()] + torch_include_dirs,
             library_dirs=torch_library_dirs,
             libraries=["torch", "torch_cpu", "c10"],  # List necessary PyTorch libraries
-            extra_compile_args=['-O3'],
+            extra_compile_args={
+                'gcc': ['-O3'],
+                'nvcc': ['-arch=sm_60', '--compiler-options', "'-fPIC'"]
+            },
             extra_link_args=[]
         )
 
