@@ -1,4 +1,4 @@
-import models
+import fast.models as models
 
 
 def build_neck(cfg):

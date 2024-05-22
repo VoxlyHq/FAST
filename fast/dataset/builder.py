@@ -1,5 +1,4 @@
-import dataset
-
+import fast.models as models
 
 def build_data_loader(cfg):
     param = dict()

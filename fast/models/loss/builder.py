@@ -1,5 +1,4 @@
-import models
-
+import fast.models as models
 
 def build_loss(cfg):
     param = dict()
