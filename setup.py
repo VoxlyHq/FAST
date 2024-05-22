@@ -1,44 +1,78 @@
-from setuptools import setup, find_packages, Command
-from setuptools.command.build_ext import build_ext as _build_ext
-import subprocess
-import os
+import platform
+from setuptools import setup, find_packages, Extension
+from Cython.Build import cythonize
+import numpy
 
-class CustomBuildExtCommand(_build_ext):
-    """A custom command to run setup.py files in subdirectories."""
-    description = 'run setup.py in subdirectories'
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    """Custom build command that runs setup.py in subdirectories."""
-    def run(self):
-        print("building custom modules for fast-ocr")
-        # Check for OS and CUDA GPU
-        os_name = platform.system()
+# Function to determine the correct directory for CCL
+def determine_ccl_dir():
+    os_name = platform.system()
+    try:
+        import torch
         has_cuda = torch.cuda.is_available()
+    except ImportError:
+        has_cuda = False
 
-        if os_name == 'Darwin':  # macOS
-            ccl_dir = 'ccl_cpu' #TODO in future add metal
-        elif has_cuda:
-            ccl_dir = 'ccl'  # CUDA GPU available
-        else:
-            ccl_dir = 'ccl_cpu'  # Default to your_ccl_dir
+    if os_name == 'Darwin':  # macOS
+        return 'ccl_cpu'
+    elif has_cuda:
+        return 'ccl'  # CUDA GPU available
+    else:
+        return 'ccl_cpu'  # Default to cpu
 
-        subdir_setup_scripts = [
-            "./models/post_processing/pa/setup.py",
-            "./models/post_processing/pse/setup.py",
-            f"./models/post_processing/{ccl_dir}/setup.py",
-        ]
+def get_ccl_extension():
+    # Determine the CCL directory
+    ccl_dir = determine_ccl_dir()
 
-        for script in subdir_setup_scripts:
-            subprocess.check_call([os.sys.executable, script, "build_ext", "--inplace"])
+    print(f"ccl_dir -#{ccl_dir}")
+    if ccl_dir == 'ccl':
+        print("CUDA is available, compiling CCL with CUDA support")
+        from torch.utils.cpp_extension import BuildExtension, CUDAExtension
+        return CUDAExtension(
+            'ccl_cuda',
+            sources=[
+                'fast/models/post_processing/ccl/ccl.cpp',
+                'fast/models/post_processing/ccl/ccl_cuda.cu',
+            ],
+            extra_compile_args={'cxx': ['-g'],
+                                'nvcc': ['-O2']}
+        )
+    else:
+        return Extension(
+            'ccl',
+            sources=['fast/models/post_processing/ccl_cpu/ccl.cpp'],
+            language='c++',
+            include_dirs=[numpy.get_include()],
+            library_dirs=[],
+            libraries=[],
+            extra_compile_args=['-O3'],
+            extra_link_args=[]
+        )
 
-        # Run the original build_ext command
-        super().run()
+# Define extensions
+extensions = [
+    Extension(
+        'pa',
+        sources=['fast/models/post_processing/pa/pa.pyx'],
+        language='c++',
+        include_dirs=[numpy.get_include()],
+        library_dirs=[],
+        libraries=[],
+        extra_compile_args=['-O3'],
+        extra_link_args=[]
+    ),
+    Extension(
+        'pse',
+        sources=["fast/models/post_processing/pse/pse.pyx"],
+        language='c++',
+        include_dirs=[numpy.get_include()],
+        library_dirs=[],
+        libraries=[],
+        extra_compile_args=['-O3'],
+        extra_link_args=[]
+    ),
+    get_ccl_extension(),
+]
+
 
 
 with open('requirements.txt', encoding="utf-8-sig") as f:
@@ -66,7 +100,5 @@ setup(
     keywords=['FAST - OCR realtime ocr library'],
     classifiers=[
     ],
-    cmdclass={
-         'build_ext': CustomBuildExtCommand,
-    }
+    ext_modules=extensions,
 )
