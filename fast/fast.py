@@ -107,9 +107,11 @@ class FAST:
         img = transforms.ToTensor()(img)
         img = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(img)
 
-
+        imgs = img.unsqueeze(0)
+        if not self.cpu:
+            imgs = imgs.cuda(non_blocking=True)
         with torch.no_grad():
-            outputs = self.model(img.unsqueeze(0), img_metas=img_meta, cfg=self.cfg)
+            outputs = self.model(imgs, img_metas=img_meta, cfg=self.cfg)
 
             if self.annotate and len(outputs['results'][0]['scores']) > 0:
                 # Annotate the image with bounding boxes
