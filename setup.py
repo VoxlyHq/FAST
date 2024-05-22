@@ -54,7 +54,7 @@ setup(
     name='fast-ocr',
     packages=['fast'],
     include_package_data=True,
-    version='1.7.1',
+    version='0.0.1',
     install_requires=requirements, #TODO how to compile cython code???
     license='Apache License 2.0',
     description='End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution',
