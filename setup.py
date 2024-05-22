@@ -76,9 +76,9 @@ def customize_compiler_for_nvcc(self):
             self.set_executable('compiler_so', CUDA['nvcc'])
             # use only a subset of the extra_postargs, which are 1-1 translated
             # from the extra_compile_args in the Extension class
-            postargs = extra_postargs['nvcc']
+            postargs = extra_postargs << 'nvcc'
         else:
-            postargs = extra_postargs['gcc']
+            postargs = extra_postargs << 'gcc'
 
         super(obj, src, ext, cc_args, postargs, pp_opts)
         # reset the default compiler_so, which we might have changed for cuda
