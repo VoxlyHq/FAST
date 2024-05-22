@@ -51,13 +51,15 @@ class custom_build_ext(_build_ext):
     def build_extensions(self):
         self.compiler.src_extensions.append('.cu')
         original_compile = self.compiler._compile
+
         def new_compile(obj, src, ext, cc_args, extra_postargs, pp_opts):
             if src.endswith('.cu'):
                 self.set_executable('compiler_so', 'nvcc')
-                postargs = ['-Xcompiler', '-fPIC'] + extra_postargs
+                postargs = ['-Xcompiler', '-fPIC'] + (extra_postargs or [])
             else:
-                postargs = extra_postargs
+                postargs = extra_postargs or []
             original_compile(obj, src, ext, cc_args, postargs, pp_opts)
+
         self.compiler._compile = new_compile
         _build_ext.build_extensions(self)
 
