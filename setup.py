@@ -54,10 +54,12 @@ class custom_build_ext(_build_ext):
 
         def new_compile(obj, src, ext, cc_args, extra_postargs, pp_opts):
             if src.endswith('.cu'):
-                self.set_executable('compiler_so', 'nvcc')
+                self.set_executables(compiler_so='nvcc')
                 postargs = ['-Xcompiler', '-fPIC'] + (extra_postargs or [])
+                postargs = postargs['nvcc']
             else:
                 postargs = extra_postargs or []
+                postargs = postargs['gcc']
             original_compile(obj, src, ext, cc_args, postargs, pp_opts)
 
         self.compiler._compile = new_compile
