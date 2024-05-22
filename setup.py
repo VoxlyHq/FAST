@@ -16,6 +16,7 @@ class CustomBuildExtCommand(_build_ext):
 
     """Custom build command that runs setup.py in subdirectories."""
     def run(self):
+        print("building custom modules for fast-ocr")
         # Check for OS and CUDA GPU
         os_name = platform.system()
         has_cuda = torch.cuda.is_available()

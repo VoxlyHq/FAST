@@ -2,7 +2,7 @@ include LICENSE.txt
 include README.md
 
 include fast/data/*
-include fast/util/*
+include fast/utils/*
 include fast/compat/*
 recursive-include fast/dataset *
 recursive-include fast/models *
