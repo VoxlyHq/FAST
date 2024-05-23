@@ -88,8 +88,11 @@ def get_ccl_extension():
             ],
             include_dirs=[numpy.get_include()] + torch_include_dirs,
             library_dirs=torch_library_dirs,
-            libraries=["torch", "c10", "torch_cuda"],  # Ensure the libraries are correct
-            extra_compile_args={'gcc': ['-fPIC'], 'nvcc': ['-Xcompiler', '-fPIC']},
+            libraries=["torch", "c10", "torch_cuda"],
+            extra_compile_args={
+                'gcc': ['-fPIC', '-std=c++17'],
+                'nvcc': ['-Xcompiler', '-fPIC', '-std=c++17']
+            },
         )
     else:
         return Extension(
@@ -99,7 +102,10 @@ def get_ccl_extension():
             include_dirs=[numpy.get_include()] + torch_include_dirs,
             library_dirs=torch_library_dirs,
             libraries=["torch", "torch_cpu", "c10"],
-            extra_compile_args={'gcc': ['-O3']},
+            extra_compile_args={
+                'gcc': ['-O3', '-std=c++17'],
+                'msvc': ['/std:c++17']
+            },
         )
 
 extensions = [
@@ -108,14 +114,20 @@ extensions = [
         sources=['fast/models/post_processing/pa/pa.pyx'],
         language='c++',
         include_dirs=[numpy.get_include()],
-        extra_compile_args=['-O3'],
+        extra_compile_args={
+            'gcc': ['-O3', '-std=c++17'],
+            'msvc': ['/std:c++17']
+        },
     ),
     Extension(
         'pse',
         sources=["fast/models/post_processing/pse/pse.pyx"],
         language='c++',
         include_dirs=[numpy.get_include()],
-        extra_compile_args=['-O3'],
+        extra_compile_args={
+            'gcc': ['-O3', '-std=c++17'],
+            'msvc': ['/std:c++17']
+        },
     ),
     get_ccl_extension(),
 ]
