@@ -61,7 +61,7 @@ class FAST:
 
     def has_text(self, image):
         outputs = self.run_model(image)
-        print(outputs['results'])
+        #print(outputs['results'])
         # If scores are present, return True
         if len(outputs['results'][0]['scores']) > 0:
             return True
