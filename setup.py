@@ -59,7 +59,9 @@ class custom_build_ext(_build_ext):
                 postargs = postargs['nvcc']
             else:
                 postargs = extra_postargs or []
-                postargs = postargs['gcc']
+                if isinstance(extra_postargs, dict):
+                    postargs = extra_postargs.get('gcc', [])
+                #postargs = postargs['gcc']
             original_compile(obj, src, ext, cc_args, postargs, pp_opts)
 
         self.compiler._compile = new_compile
