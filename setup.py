@@ -46,23 +46,46 @@ def locate_cuda():
 
     return cudaconfig
 
-# run the customize_compiler
+def customize_compiler_for_nvcc(self):
+    """
+    Inject deep into distutils to customize how the dispatch to gcc/nvcc works.
+    
+    If you subclass UnixCCompiler, it's not trivial to get your subclass injected in,
+    and still have the right customizations (i.e., distutils.sysconfig.customize_compiler)
+    run on it. So instead of going the OO route, I have this. Note, it's kind of like
+    a weird functional subclassing going on.
+    """
+    # Tell the compiler it can process.cu files
+    self.src_extensions.append('.cu')
+
+    # Save references to the default compiler_so and _compile methods
+    default_compiler_so = self.compiler_so
+    super = self._compile
+
+    # Now redefine the _compile method. This gets executed for each object but
+    # distutils doesn't have the ability to change compilers based on source extension:
+    # we add it.
+    def _compile(obj, src, ext, cc_args, extra_postargs, pp_opts):
+        if os.path.splitext(src)[1] == '.cu':
+            CUDA = locate_cuda()
+            # Use the CUDA for.cu files
+            self.set_executable('compiler_so', CUDA['nvcc'])
+            # Use only a subset of the extra_postargs, which are 1-1 translated
+            # from the extra_compile_args in the Extension class
+            postargs = extra_postargs['nvcc']
+        else:
+            postargs = extra_postargs['gcc']
+
+        super(obj, src, ext, cc_args, postargs, pp_opts)
+        # Reset the default compiler_so, which we might have changed for CUDA
+        self.compiler_so = default_compiler_so
+
+    # Inject our redefined _compile method into the class
+    self._compile = _compile
+
 class custom_build_ext(_build_ext):
     def build_extensions(self):
-        self.compiler.src_extensions.append('.cu')
-        original_compile = self.compiler._compile
-
-        def new_compile(obj, src, ext, cc_args, extra_postargs, pp_opts):
-            if src.endswith('.cu'):
-                self.set_executables(compiler_so='nvcc')
-                postargs = ['-Xcompiler', '-fPIC'] + (extra_postargs or [])
-                postargs = postargs['nvcc']
-            else:
-                postargs = extra_postargs or []
-                postargs = postargs['gcc']
-            original_compile(obj, src, ext, cc_args, postargs, pp_opts)
-
-        self.compiler._compile = new_compile
+        customize_compiler_for_nvcc(self.compiler)
         _build_ext.build_extensions(self)
 
 # Function to determine the correct directory for CCL
