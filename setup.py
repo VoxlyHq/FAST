@@ -74,7 +74,10 @@ def customize_compiler_for_nvcc(self):
             # from the extra_compile_args in the Extension class
             postargs = extra_postargs['nvcc']
         else:
-            postargs = extra_postargs['gcc']
+            if isinstance(extra_postargs, list):
+                postargs = extra_postargs
+            else:
+                postargs = extra_postargs['gcc']
 
         super(obj, src, ext, cc_args, postargs, pp_opts)
         # Reset the default compiler_so, which we might have changed for CUDA
