@@ -17,7 +17,7 @@ def find_in_path(name, path):
     Find a file in a search path
     """
     
-    #adapted fom http://code.activestate.com/recipes/52224-find-a-file-given-a-search-path/
+    #adapted from http://code.activestate.com/recipes/52224-find-a-file-given-a-search-path/
     for dir in path.split(os.pathsep):
         binpath = join(dir, name)
         if os.path.exists(binpath):
@@ -86,9 +86,18 @@ def customize_compiler_for_nvcc(self):
     # Inject our redefined _compile method into the class
     self._compile = _compile
 
+
 class custom_build_ext(_build_ext):
     def build_extensions(self):
-        customize_compiler_for_nvcc(self.compiler)
+        #windows, msvc
+        if self.compiler.compiler_type == 'msvc':
+            self._build_extensions_msvc()
+        else: #linux, mac
+            customize_compiler_for_nvcc(self.compiler)
+            _build_ext.build_extensions(self)
+
+    def _build_extensions_msvc(self):
+        # Handle MSVC specific customizations here if needed
         _build_ext.build_extensions(self)
 
 # Function to determine the correct directory for CCL
@@ -100,7 +109,7 @@ def determine_ccl_dir():
     except ImportError:
         has_cuda = False
 
-    if os_name == 'Darwin':  # macOS
+    if os_name == 'Darwin' or os_name == 'Windows':  # macOS, windows we dont know how to do cuda yet
         return 'ccl_cpu'
     elif has_cuda:
         return 'ccl'  # CUDA GPU available
