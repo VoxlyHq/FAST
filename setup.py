@@ -98,7 +98,7 @@ class custom_build_ext(_build_ext):
 
     def _build_extensions_msvc(self):
         for ext in self.extensions:
-            ext.extra_compile_args = ['/std:c++17']
+            ext.extra_compile_args = ['/std:c++17', '/wd4251']
         # Handle MSVC specific customizations here if needed
         _build_ext.build_extensions(self)
 
@@ -136,15 +136,15 @@ def get_ccl_extension():
                 'fast/models/post_processing/ccl/ccl.cpp',
                 'fast/models/post_processing/ccl/ccl_cuda.cu',
             ],
-            extra_compile_args={'gcc': ['-fPIC', '-O3'], 'nvcc': ['-Xcompiler', '-fPIC'], 'msvc': ['/std:c++17']},
+            extra_compile_args={'gcc': ['-fPIC', '-O3'], 'nvcc': ['-Xcompiler', '-fPIC'], 'msvc': ['/std:c++17', '/wd4251']},
         )
     else:
         compile_args ={
                 'gcc': ['-O3','-fPIC'],
-                'msvc': ['/std:c++17']
+                'msvc': ['/std:c++17', '/wd4251']
             }
         if platform.system() == "Windows":
-            compile_args = ['/std:c++17']
+            compile_args = ['/std:c++17', '/wd4251']
         
         return Extension(
             'ccl',
@@ -159,7 +159,7 @@ def get_ccl_extension():
 
 compile_args = ['-O3']
 if platform.system() == "Windows":
-    compile_args = ['/std:c++17']
+    compile_args = ['/std:c++17', '/wd4251']
 # Define extensions
 extensions = [
     Extension(
