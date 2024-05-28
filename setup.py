@@ -97,6 +97,8 @@ class custom_build_ext(_build_ext):
             _build_ext.build_extensions(self)
 
     def _build_extensions_msvc(self):
+        for ext in self.extensions:
+            ext.extra_compile_args = {'msvc': ['/std:c++17']}
         # Handle MSVC specific customizations here if needed
         _build_ext.build_extensions(self)
 
@@ -134,9 +136,16 @@ def get_ccl_extension():
                 'fast/models/post_processing/ccl/ccl.cpp',
                 'fast/models/post_processing/ccl/ccl_cuda.cu',
             ],
-            extra_compile_args={'gcc': ['-fPIC', '-O3'], 'nvcc': ['-Xcompiler', '-fPIC']},
+            extra_compile_args={'gcc': ['-fPIC', '-O3'], 'nvcc': ['-Xcompiler', '-fPIC'], 'msvc': ['/std:c++17']},
         )
     else:
+        compile_args ={
+                'gcc': ['-O3','-fPIC'],
+                'msvc': ['/std:c++17']
+            }
+        if platform.system() == "Windows":
+            compile_args = ['/std:c++17']
+        
         return Extension(
             'ccl',
             sources=['fast/models/post_processing/ccl_cpu/ccl.cpp'],
@@ -144,12 +153,13 @@ def get_ccl_extension():
             include_dirs=[numpy.get_include()] + torch_include_dirs,
             library_dirs=torch_library_dirs,
             libraries=["torch", "torch_cpu", "c10"],  # List necessary PyTorch libraries
-            extra_compile_args={
-                'gcc': ['-O3','-fPIC']
-            },
+            extra_compile_args=compile_args,
             extra_link_args=[]
         )
 
+compile_args = ['-O3']
+if platform.system() == "Windows":
+    compile_args = ['/std:c++17']
 # Define extensions
 extensions = [
     Extension(
@@ -159,7 +169,7 @@ extensions = [
         include_dirs=[numpy.get_include()],
         library_dirs=[],
         libraries=[],
-        extra_compile_args=['-O3'],
+        extra_compile_args=compile_args,
         extra_link_args=[]
     ),
     Extension(
@@ -169,7 +179,7 @@ extensions = [
         include_dirs=[numpy.get_include()],
         library_dirs=[],
         libraries=[],
-        extra_compile_args=['-O3'],
+        extra_compile_args=compile_args,
         extra_link_args=[]
     ),
     get_ccl_extension(),
