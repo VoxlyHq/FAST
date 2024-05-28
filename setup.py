@@ -147,7 +147,7 @@ def get_ccl_extension():
             compile_args = ['/std:c++17', '/wd4251']
         
         return Extension(
-            'ccl',
+            'ccl_cpu',
             sources=['fast/models/post_processing/ccl_cpu/ccl.cpp'],
             language='c++',
             include_dirs=[numpy.get_include()] + torch_include_dirs,
