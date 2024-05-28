@@ -116,7 +116,6 @@ def get_ccl_extension():
     ccl_dir = determine_ccl_dir()
 
     print(f"ccl_dir -#{ccl_dir}")
-    ccl_dir = 'ccl_cpu'
     if ccl_dir == 'ccl':
         print("CUDA is available, compiling CCL with CUDA support")
         from torch.utils.cpp_extension import BuildExtension, CUDAExtension
