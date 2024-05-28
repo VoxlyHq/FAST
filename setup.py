@@ -98,7 +98,7 @@ class custom_build_ext(_build_ext):
 
     def _build_extensions_msvc(self):
         for ext in self.extensions:
-            ext.extra_compile_args = {'msvc': ['/std:c++17']}
+            ext.extra_compile_args = ['/std:c++17']
         # Handle MSVC specific customizations here if needed
         _build_ext.build_extensions(self)
 
