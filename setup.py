@@ -116,6 +116,7 @@ def get_ccl_extension():
     ccl_dir = determine_ccl_dir()
 
     print(f"ccl_dir -#{ccl_dir}")
+    ccl_dir = 'ccl_cpu'
     if ccl_dir == 'ccl':
         print("CUDA is available, compiling CCL with CUDA support")
         from torch.utils.cpp_extension import BuildExtension, CUDAExtension
@@ -125,7 +126,7 @@ def get_ccl_extension():
                 'fast/models/post_processing/ccl/ccl.cpp',
                 'fast/models/post_processing/ccl/ccl_cuda.cu',
             ],
-            extra_compile_args={'gcc': ['-fPIC'], 'nvcc': ['-Xcompiler', '-fPIC']},
+            extra_compile_args={'gcc': ['-fPIC', '-O3'], 'nvcc': ['-Xcompiler', '-fPIC']},
         )
     else:
         return Extension(
@@ -136,8 +137,7 @@ def get_ccl_extension():
             library_dirs=torch_library_dirs,
             libraries=["torch", "torch_cpu", "c10"],  # List necessary PyTorch libraries
             extra_compile_args={
-                'gcc': ['-O3'],
-                'nvcc': ['-arch=sm_60', '--compiler-options', "'-fPIC'"]
+                'gcc': ['-O3','-fPIC']
             },
             extra_link_args=[]
         )
