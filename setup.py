@@ -131,7 +131,7 @@ def get_ccl_extension():
         print("CUDA is available, compiling CCL with CUDA support")
         from torch.utils.cpp_extension import BuildExtension, CUDAExtension
         return CUDAExtension(
-            'ccl_cuda',
+            'fast.models.post_processing.ccl.ccl_cuda',
             sources=[
                 'fast/models/post_processing/ccl/ccl.cpp',
                 'fast/models/post_processing/ccl/ccl_cuda.cu',
@@ -147,7 +147,7 @@ def get_ccl_extension():
             compile_args = ['/std:c++17', '/wd4251']
         
         return Extension(
-            'ccl_cpu',
+            'fast.models.post_processing.ccl_cpu.ccl_cpu',
             sources=['fast/models/post_processing/ccl_cpu/ccl.cpp'],
             language='c++',
             include_dirs=[numpy.get_include()] + torch_include_dirs,
@@ -163,7 +163,7 @@ if platform.system() == "Windows":
 # Define extensions
 extensions = [
     Extension(
-        'pa',
+        'fast.models.post_processing.pa.pa',
         sources=['fast/models/post_processing/pa/pa.pyx'],
         language='c++',
         include_dirs=[numpy.get_include()],
@@ -173,7 +173,7 @@ extensions = [
         extra_link_args=[]
     ),
     Extension(
-        'pse',
+        'fast.models.post_processing.pse.pse',
         sources=["fast/models/post_processing/pse/pse.pyx"],
         language='c++',
         include_dirs=[numpy.get_include()],
@@ -201,9 +201,12 @@ setup(
     name='fast-ocr',
     packages=['fast'],
     include_package_data=True,
+    package_data={
+        '': ['*.so', '*.pyd'],
+    },
     cmdclass={'build_ext': custom_build_ext,},
     version='0.0.1',
-    install_requires=requirements, #TODO how to compile cython code???
+    install_requires=requirements,
     license='Apache License 2.0',
     description='End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution',
     long_description=readme(),
