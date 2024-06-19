@@ -20,6 +20,11 @@ This repository is an official implementation of the [FAST: Faster Arbitrarily-S
 </details>
 
 
+## Fork Items
+
+Added Pip installable module
+Added MPS support
+
 ## News
 - `Mar 11, 2024:`🚀🚀 FAST has been integrated into the [docTR](https://github.com/mindee/doctr), a seamless, high-performing & accessible library for OCR-related tasks.
 - `Jan 10, 2023:`🚀 Code and models are released.
