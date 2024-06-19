@@ -17,10 +17,14 @@ except:
         print("ccl_cuda and ccl_cpu are both not installed!")
 
 
+has_mps = torch.has_mps
+cuda_available = torch.cuda.is_available()
 def gpu_synchronize():
-    if torch.cuda.is_available(): #TODO memoize this?
-        torch.cuda.synchronize()
-
+        global has_mps, cuda_available
+        if has_mps:
+            torch.mps.synchronize()
+        elif cuda_available:
+            torch.cuda.synchronize()
 
 class FASTHead(nn.Module):
     def __init__(self, conv, blocks, final, pooling_size,
@@ -92,7 +96,7 @@ class FASTHead(nn.Module):
             labels_ = ccl_cuda.ccl_batch(kernels)  # B*160*160
         else:
             labels_ = []
-            for kernel in kernels.numpy():
+            for kernel in kernels.cpu().numpy():
                 ret, label_ = cv2.connectedComponents(kernel)
                 labels_.append(label_)
             labels_ = np.array(labels_)
