@@ -38,14 +38,18 @@ class FAST:
 
 
         os_name = platform.system()
-        has_cuda = torch.cuda.is_available()
+        self.has_cuda = torch.cuda.is_available()
+        self.has_mps = torch.backends.mps.is_available()
         #On OSX we can only use cpu
         if os_name == 'Darwin':  # macOS
-            self.cpu = True
+            if self.has_mps:
+                self.cpu = False
+            else:
+                self.cpu = True
         elif not has_cuda:
             self.cpu = True
             print("Cuda is not installed on this machine, running on CPU.")
-
+    
         self.cfg = Config.fromfile(self.config)
         if self.min_score is not None:
             self.cfg.test_cfg.min_score = self.min_score
@@ -109,7 +113,10 @@ class FAST:
 
         imgs = img.unsqueeze(0)
         if not self.cpu:
-            imgs = imgs.cuda(non_blocking=True)
+            if self.has_mps:
+                imgs = imgs.to('mps', non_blocking=True)
+            else:
+                imgs = imgs.cuda(non_blocking=True)
         with torch.no_grad():
             outputs = self.model(imgs, img_metas=img_meta, cfg=self.cfg)
 
@@ -136,7 +143,11 @@ class FAST:
             logging.info('Testing %d/%d\r' % (idx, len(test_loader)))
             # prepare input
             if not self.cpu:
-                data['imgs'] = data['imgs'].cuda(non_blocking=True)
+                if self.has_mps:
+                    imgs = imgs.to('mps', non_blocking=True)
+                elif self.cuda:
+                    data['imgs'] = data['imgs'].cuda(non_blocking=True)
+
             data.update(dict(cfg=self.cfg))
             # forward
             with torch.no_grad():
@@ -159,7 +170,10 @@ class FAST:
         model = build_model(self.cfg.model)
 
         if not self.cpu:
-            model = model.cuda()
+                if self.has_mps:
+                    model = model.to('mps')
+                else:
+                    model = model.cuda()
 
         if self.checkpoint is not None:
             if os.path.isfile(self.checkpoint):
