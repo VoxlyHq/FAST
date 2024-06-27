@@ -168,10 +168,12 @@ class FAST:
     def load_model(self):
         # model
         model = build_model(self.cfg.model)
+        device = torch.device('cpu' if self.cpu else 'cuda')
 
         if not self.cpu:
                 if self.has_mps:
                     model = model.to('mps')
+                    device = torch.device('mps')
                 else:
                     model = model.cuda()
 
@@ -180,7 +182,7 @@ class FAST:
                 print("Loading model and optimizer from checkpoint '{}'".format(self.checkpoint))
                 logging.info("Loading model and optimizer from checkpoint '{}'".format(self.checkpoint))
                 sys.stdout.flush()
-                checkpoint = torch.load(self.checkpoint)
+                checkpoint = torch.load(self.checkpoint, map_location=device)
 
                 if not self.ema:
                     state_dict = checkpoint['state_dict']

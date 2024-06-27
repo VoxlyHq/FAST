@@ -17,7 +17,7 @@ except:
         print("ccl_cuda and ccl_cpu are both not installed!")
 
 
-has_mps = torch.has_mps
+has_mps = torch.backends.mps.is_built()
 cuda_available = torch.cuda.is_available()
 def gpu_synchronize():
         global has_mps, cuda_available
